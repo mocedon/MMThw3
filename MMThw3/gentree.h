@@ -3,13 +3,8 @@
 
 #include "defs.h"
 
-/* declaring structs */
-typedef struct _tree Tree;
-typedef struct _ELEMENT ELEMENT;
-
 /* naming pointers */
 typedef Tree* pTree;
-typedef ELEMENT* PELEMENT;
 typedef void* pNode;
 
 /* node fuctions */
@@ -36,10 +31,10 @@ Result TreeNodeIsLeaf(pTree t, int key, Bool* answer);
 
 Result TreeDelLeaf(pTree t, int key);
 
-PELEMENT TreeGetRoot(pTree t);
+pNode TreeGetRoot(pTree t);
 
-PELEMENT TreeGetNode(pTree t, int key);
+pNode TreeGetNode(pTree t, int key);
 
-PELEMENT* TreeGetChildren(pTree t, int key);
+pNode* TreeGetChildren(pTree t, int key);
 
 #endif

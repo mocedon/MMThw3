@@ -6,16 +6,17 @@
 #include "gentree.h"
 
 /* definition of the element in the tree */
-struct _ELEMENT
+typedef ELEMENT* PELEMENT;
+typedef struct _ELEMENT
 {
 	pNode obj;
 	PELEMENT* children;
 	PELEMENT parent;
 	int childrenCount;
-}
+}ELEMENT;
 
 /* definition of the tree structure */
-struct _tree
+typedef struct _tree
 {
 	PELEMENT head;
 	GetKeyFunction getKey;
@@ -23,7 +24,7 @@ struct _tree
 	PrintFunction print;
 	DelFunction del;
 	int k;
-}
+}Tree;
 
 /* hidden fuctions */
 void delElem(PELEMENT elem, DelFunction del)//aux of TreeDestroy
@@ -75,12 +76,12 @@ PELEMENT findElem(PELEMENT elem, int key, GetKeyFunction getKey)
 
 PELEMENT createElem(pNode node, CloneFunction clone, int k)//creates new tree element
 {
-	PELEMENT elem = malloc(sizeof(ELEMENT));
+	PELEMENT elem = (PELEMENT)malloc(sizeof(ELEMENT));
 	if (elem == NULL)
 	{
 		return NULL;
 	}
-	PELEMENT* children = malloc(sizeof(PELEMENT)*k);
+	PELEMENT* children = (PELEMENT*)malloc(sizeof(PELEMENT)*k);
 	if (children == NULL)
 	{
 		free(elem);
@@ -104,24 +105,6 @@ PELEMENT createElem(pNode node, CloneFunction clone, int k)//creates new tree el
 	return elem;
 }
 
-PELEMENT copyElem(PELEMENT elem)
-{
-	if (elem == NULL)
-	{
-		return NULL;
-	}
-	PELEMENT newElem = malloc(sizeof(ELEMENT));
-	if (newElem == NULL)
-	{
-		return NULL;
-	}
-	newElem->obj = elem->obj;
-	newElem->children = elem->children;
-	newElem->childrenCount = elem->childrenCount;
-	newElem->parent = elem->parent;
-	return elem;
-}
-
 /* public fuctions */
 pTree TreeCreate(GetKeyFunction getKey, CloneFunction clone,
 	PrintFunction print, DelFunction del, int k)
@@ -130,7 +113,7 @@ pTree TreeCreate(GetKeyFunction getKey, CloneFunction clone,
 	{
 		return NULL;
 	}
-	pTree newTree = malloc(sizeof(Tree));
+	pTree newTree = (pTree)malloc(sizeof(Tree));
 	if (newTree == NULL)
 	{
 		return NULL;
@@ -152,7 +135,7 @@ void TreeDestroy(pTree t)
 
 int TreeNodesCount(pTree t)
 {
-	return nodeCount(t->head);
+	return countElem(t->head);
 }
 
 void TreePrint(pTree t)
@@ -241,32 +224,52 @@ Result TreeDelLeaf(pTree t, int key)
 	return SUCCESS;
 }
 
-PELEMENT TreeGetRoot(pTree t)
+pNode TreeGetRoot(pTree t)
 {
-	reutrn copyElem(t->head);
+	if (t->head == NULL || t->head->obj == NULL)
+	{
+		return NULL;
+	}
+	return t->clone(t->head->obj);
 }
 
-PELEMENT TreeGetNode(pTree t, int key)
+pNode TreeGetNode(pTree t, int key)
 {
 	PELEMENT elem = findElem(t->head, key, t->getKey);
-	return copyElem(elem);
+	if (elem == NULL || elem->obj == NULL)
+	{
+		return NULL;
+	}
+	return t->clone(elem->obj);
 }
 
-PELEMENT* TreeGetChildren(pTree t, int key)
+pNode* TreeGetChildren(pTree t, int key)
 {
 	PELEMENT elem = findElem(t->head, key, t->getKey);
 	if (elem == NULL || elem->children == NULL)
 	{
 		return NULL;
 	}
-	PELEMENT* children = malloc(sizeof(PELEMENT)*(t->k));
+	pNode* children = (pNode*)malloc(sizeof(pNode)*(t->k));
 	if (children == NULL)
 	{
 		return NULL;
 	}
-	for (int i = 0; i < t->k; i++)
+	for (int i = 0; i < elem->childrenCount; i++)
 	{
-		children[i] = elem->children[i];
+		children[i] = t->clone(elem->children[i]->obj);
+		if (children[i] == NULL)
+		{
+			for (int j = 0; j < i; j++)
+			{
+				free(children[j]);
+			}
+			free(children);
+			return NULL;
+		}
+	}for (int i = elem->childrenCount; i < t->k; i++)
+	{
+		children[i] = NULL;
 	}
 	return children;
 }
