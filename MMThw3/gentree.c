@@ -27,7 +27,7 @@ typedef struct _tree
 }Tree;
 
 /* hidden fuctions */
-void delElem(PELEMENT elem, DelFunction del)//recurcively deletes an element and all decendands
+void delElem(PELEMENT elem, DelFunction del) //recurcively deletes an element and all decendands
 {
 	for (int i = 0; i < elem->childrenCount; i++)
 	{
@@ -38,7 +38,7 @@ void delElem(PELEMENT elem, DelFunction del)//recurcively deletes an element and
 	free(elem);
 }
 
-int countElem(PELEMENT elem)//recurcively counts number of decendants
+int countElem(PELEMENT elem) //recurcively counts number of decendants
 {
 	int count = 1;
 	for (int i = 0; i < elem->childrenCount; i++)
@@ -48,7 +48,7 @@ int countElem(PELEMENT elem)//recurcively counts number of decendants
 	return count;
 }
 
-void printElem(PELEMENT elem, PrintFunction print)//recurcively prints decandants
+void printElem(PELEMENT elem, PrintFunction print) //recurcively prints decandants
 {
 	print(elem->obj);
 	for (int i = 0; i < elem->childrenCount; i++)
@@ -57,7 +57,7 @@ void printElem(PELEMENT elem, PrintFunction print)//recurcively prints decandant
 	}
 }
 
-PELEMENT findElem(PELEMENT elem, int key, GetKeyFunction getKey)//recurcively finds an element
+PELEMENT findElem(PELEMENT elem, int key, GetKeyFunction getKey) //recurcively finds an element
 {
 	if (getKey(elem->obj) == key)
 	{
@@ -74,7 +74,7 @@ PELEMENT findElem(PELEMENT elem, int key, GetKeyFunction getKey)//recurcively fi
 	return NULL;
 }
 
-PELEMENT createElem(pNode node, CloneFunction clone, int k)//creates a new tree element
+PELEMENT createElem(pNode node, CloneFunction clone, int k) //creates a new tree element
 {
 	PELEMENT elem = (PELEMENT)malloc(sizeof(ELEMENT));
 	if (elem == NULL)
@@ -203,7 +203,7 @@ Result TreeDelLeaf(pTree t, int key)
 	{
 		return FAILURE;
 	}
-	if (elem = t->head)
+	if (elem == t->head)
 	{
 		delElem(elem, t->del);
 		t->head = NULL;
@@ -268,7 +268,8 @@ pNode* TreeGetChildren(pTree t, int key)
 			free(children);
 			return NULL;
 		}
-	}for (int i = elem->childrenCount; i < t->k; i++)
+	}
+	for (int i = elem->childrenCount; i < t->k; i++)
 	{
 		children[i] = NULL;
 	}
