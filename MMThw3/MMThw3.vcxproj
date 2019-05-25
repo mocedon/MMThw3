@@ -115,6 +115,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="defs.h" />
+    <ClInclude Include="gentree.h" />
+    <ClInclude Include="partition.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gentree.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="partition.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,25 +6,6 @@
 #include "gentree.h"
 
 /* definition of the element in the tree */
-typedef ELEMENT* PELEMENT;
-typedef struct _ELEMENT
-{
-	pNode obj;
-	PELEMENT* children;
-	PELEMENT parent;
-	int childrenCount;
-}ELEMENT;
-
-/* definition of the tree structure */
-typedef struct _tree
-{
-	PELEMENT head;
-	GetKeyFunction getKey;
-	CloneFunction clone;
-	PrintFunction print;
-	DelFunction del;
-	int k;
-}Tree;
 
 /* hidden fuctions */
 void delElem(PELEMENT elem, DelFunction del) //recurcively deletes an element and all decendands
@@ -168,7 +149,7 @@ Result TreeAddLeaf(pTree t, int key, pNode newLeaf)
 
 Result TreeNodeIsActive(pTree t, int key, Bool* answer)
 {
-	answer* = FALSE;
+	*answer = FALSE;
 	PELEMENT elem = findElem(t->head, key, t->getKey);
 	if (elem == NULL)
 	{
@@ -176,14 +157,14 @@ Result TreeNodeIsActive(pTree t, int key, Bool* answer)
 	}
 	if (elem->childrenCount < t->k)
 	{
-		answer* = TRUE;
+		*answer = TRUE;
 	}
 	return SUCCESS;
 }
 
 Result TreeNodeIsLeaf(pTree t, int key, Bool* answer)
 {
-	answer* = FALSE;
+	*answer = FALSE;
 	PELEMENT elem = findElem(t->head, key, t->getKey);
 	if (elem == NULL)
 	{
@@ -191,7 +172,7 @@ Result TreeNodeIsLeaf(pTree t, int key, Bool* answer)
 	}
 	if (elem->childrenCount == 0)
 	{
-		answer* = TRUE;
+		*answer = TRUE;
 	}
 	return SUCCESS;
 }

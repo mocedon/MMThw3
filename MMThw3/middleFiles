@@ -1,0 +1,6 @@
+#!/bin/bash
+if [[ $# -lt 3 ]]; then
+	exit 1
+fi
+result="`find $1 | tail -n+$(($2+1)) | head -n-$3 | cut -d '/' -f 2`"
+echo $result
