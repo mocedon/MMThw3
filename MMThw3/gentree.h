@@ -4,7 +4,7 @@
 #include "defs.h"
 
 typedef void* pNode;
-typedef Tree* pTree;
+typedef struct _tree* pTree;
 
 /* node fuctions */
 typedef int(*GetKeyFunction)(pNode e);

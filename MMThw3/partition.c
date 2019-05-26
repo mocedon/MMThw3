@@ -7,7 +7,7 @@
 
 #define QUARTER 4
 
-pTree tree ;
+static pTree tree;
 // Set structure
 
 typedef struct _square {
@@ -77,14 +77,13 @@ void delSquare(pNode sq)
 pSquare newSquare(double x, double y, int l  , int k)
 {
 	pSquare sq = (pSquare) malloc(sizeof(square)) ;
-	double seg = 1 / (double)l;
-	int prtX = (int) x / seg ;
-	int prtY = (int) y / seg ;
-	sq->BLX = (double) prtX * seg ;
-	sq->BLY = (double) prtY * seg ;
-	sq->dep = l ;
-	sq->key = k ;
-	return sq ;
+	int prtX = x * l;
+	int prtY = x * l;
+	sq->BLX = (double)prtX / l;
+	sq->BLY = (double)prtY / l;
+	sq->dep = l;
+	sq->key = k;
+	return sq;
 }
 
 int newKey(pSquare sq, double x, double y)
