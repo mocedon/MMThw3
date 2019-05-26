@@ -26,8 +26,8 @@ int getSquareKey(pNode sq)
 	return tmp->key ;
 }
 
-pNode cloneSquare(pNode sq
-	{
+pNode cloneSquare(pNode sq)
+{
 	pSquare newSq = (pSquare)malloc(sizeof(square)) ;
 	if (newSq == NULL) return NULL ;
 	pSquare tmp = (pSquare)sq;
@@ -36,6 +36,20 @@ pNode cloneSquare(pNode sq
 	newSq->dep = tmp->dep ;
 	newSq->key = tmp->key ;
 	return newSq ;
+}
+
+double getLength(pSquare sq)
+{
+	double dep = (double)sq->dep;
+	return 1 / dep;
+}
+
+void printOneSquare(pSquare sq)
+{
+	double x = sq->BLX;
+	double y = sq->BLY;
+	double l = getLength(sq);
+	printf("([%f, %f], [%f, %f])", x, y, x + l, y + l);
 }
 
 void printSquare(pNode sq)
@@ -52,17 +66,18 @@ void printSquare(pNode sq)
 		printf("\\");
 		printOneSquare(in_sq[i]);
 	}
+	printf("\n");
 }
 
 void delSquare(pNode sq)
 {
-	free (sq) ;
+	free(sq);
 }
 
 pSquare newSquare(double x, double y, int l  , int k)
 {
 	pSquare sq = (pSquare) malloc(sizeof(square)) ;
-	double seg = (double) 1/l ;
+	double seg = 1 / (double)l;
 	int prtX = (int) x / seg ;
 	int prtY = (int) y / seg ;
 	sq->BLX = (double) prtX * seg ;
@@ -72,25 +87,15 @@ pSquare newSquare(double x, double y, int l  , int k)
 	return sq ;
 }
 
-int newKey(double x, double y, int oldKey)
+int newKey(pSquare sq, double x, double y)
 {
-	pSquare sq = (pSquare)TreeGetNode(tree , oldKey)  ;
 	int quarter = 1;
-	double halfSeg = (double) 1 / (2 * sq->dep) ;
-	double offSetX = x - sq->BLX ;
-	double offSetY = y - sq->BLY ;
-	free (sq) ;
-	if ((offSetX / halfSeg) > 1) quarter++ ;
-	if ((offSetY / halfSeg) > 1) quarter += 2 ;
-	return (oldKey*10 + quarter) ;
-}
-
-void printOneSquare(pSquare sq)
-{
-	double x = sq->BLX;
-	double y = sq->BLY;
-	double l = 1 / (double)sq->dep;
-	printf("([%f, %f], [%f, %f])", x, y, x + l, y + l);
+	double halfSeg = getLength(sq) / 2;
+	double offSetX = x - sq->BLX;
+	double offSetY = y - sq->BLY;
+	if (offSetX > halfSeg) quarter++;
+	if (offSetY > halfSeg) quarter += 2;
+	return ((sq->key) * 10 + quarter);
 }
 
 // Public functions
@@ -111,29 +116,28 @@ void RefineCell(double x, double y)
 	int depth = 1 ;
 	while (1)
 	{
-		Bool active = FALSE;
-		Result foundSq = TreeNodeIsActive(tree, key, &active);
-		if (foundSq == FAILURE)
+		pSquare sq = TreeGetNode(tree, key);
+		if (sq==NULL)
 		{
-			pSquare sq = newSquare(x, y, depth, key);
+			sq = newSquare(x, y, depth, key);
 			TreeAddLeaf(tree, prvKey, sq);
 			free(sq);
 			return;
 		}
 		prvKey = key;
-		key = newKey(x, y, key);
+		key = newKey(sq, x, y);
 		depth *= 2;
+		free(sq);
 	}
 }
 
 void PrintPartition()
 {
-	TreePrint(tree) ;
-	printf("\n") ;
+	TreePrint(tree);
 }
 
 void DeletePartition()
 {
-	TreeDestroy(tree) ;
+	TreeDestroy(tree);
 }
 
