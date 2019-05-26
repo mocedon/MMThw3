@@ -67,6 +67,7 @@ void printSquare(pNode sq)
 		printOneSquare(in_sq[i]);
 	}
 	printf("\n");
+	free(in_sq);
 }
 
 void delSquare(pNode sq)
