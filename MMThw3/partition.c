@@ -7,9 +7,9 @@
 
 #define QUARTER 4
 
-static pTree tree;
-// Set structure
+static pTree tree = NULL;
 
+// Set structure
 typedef struct _square {
 	double BLX , BLY ; // Bottom left X,Y
 	int dep ;          // Segment length = 1/dep
@@ -49,7 +49,7 @@ void printOneSquare(pSquare sq)
 	double x = sq->BLX;
 	double y = sq->BLY;
 	double l = getLength(sq);
-	printf("([%f, %f], [%f, %f])", x, y, x + l, y + l);
+	printf("([%f, %f], [%f, %f])", x, x + l, y, y + l);
 }
 
 void printSquare(pNode sq)
@@ -61,7 +61,7 @@ void printSquare(pNode sq)
 	{
 		if (in_sq[i] == NULL)
 		{
-			return;
+			break;
 		}
 		printf("\\");
 		printOneSquare(in_sq[i]);
@@ -79,7 +79,7 @@ pSquare newSquare(double x, double y, int l  , int k)
 {
 	pSquare sq = (pSquare) malloc(sizeof(square)) ;
 	int prtX = x * l;
-	int prtY = x * l;
+	int prtY = y * l;
 	sq->BLX = (double)prtX / l;
 	sq->BLY = (double)prtY / l;
 	sq->dep = l;
