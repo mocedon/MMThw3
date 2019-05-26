@@ -6,6 +6,26 @@
 #include "gentree.h"
 
 /* definition of the element in the tree */
+typedef struct _ELEMENT
+{
+	pNode obj;
+	struct _ELEMENT** children;
+	struct _ELEMENT* parent;
+	int childrenCount;
+}ELEMENT;
+
+typedef ELEMENT* PELEMENT;
+
+/* definition of the tree structure */
+typedef struct _tree
+{
+	PELEMENT head;
+	GetKeyFunction getKey;
+	CloneFunction clone;
+	PrintFunction print;
+	DelFunction del;
+	int k;
+}Tree;
 
 /* hidden fuctions */
 void delElem(PELEMENT elem, DelFunction del) //recurcively deletes an element and all decendands

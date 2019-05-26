@@ -16,17 +16,21 @@ typedef struct _square {
 	int key ;
 }square;
 
+typedef square* pSquare;
+
 // Private functions
 
-int getSquareKey(pNode sq) {
-	square* tmp = (square*)sq ;
+int getSquareKey(pNode sq)
+{
+	pSquare tmp = (pSquare)sq ;
 	return tmp->key ;
 }
 
-pNode cloneSquare(pNode sq) {
-	square* newSq = (square*)malloc(sizeof(square)) ;
+pNode cloneSquare(pNode sq
+	{
+	pSquare newSq = (pSquare)malloc(sizeof(square)) ;
 	if (newSq == NULL) return NULL ;
-	square* tmp = (square*)sq;
+	pSquare tmp = (pSquare)sq;
 	newSq->BLX = tmp->BLX ;
 	newSq->BLY = tmp->BLY ;
 	newSq->dep = tmp->dep ;
@@ -34,20 +38,33 @@ pNode cloneSquare(pNode sq) {
 	return newSq ;
 }
 
-void printSquare(pNode sq) {
-	square* tmp = (square*)sq;
-	printf("[%.5lf , %.5lf]", tmp->BLX , tmp->BLY) ;
+void printSquare(pNode sq)
+{
+	pSquare tmp = (pSquare)sq;
+	printOneSquare(tmp);
+	pSquare* in_sq = (pSquare*)TreeGetChildren(tree, tmp->key);
+	for (int i = 0; i < QUARTER; i++)
+	{
+		if (in_sq[i] == NULL)
+		{
+			return;
+		}
+		printf("\\");
+		printOneSquare(in_sq[i]);
+	}
 }
 
-void delSquare(pNode sq) {
+void delSquare(pNode sq)
+{
 	free (sq) ;
 }
 
-square* newSquare(double x, double y, int l  , int k) {
-	square* sq = (square*) malloc(sizeof(square)) ;
+pSquare newSquare(double x, double y, int l  , int k)
+{
+	pSquare sq = (pSquare) malloc(sizeof(square)) ;
 	double seg = (double) 1/l ;
-	int prtX = (double) x / seg ;
-	int prtY = (double) y / seg ;
+	int prtX = (int) x / seg ;
+	int prtY = (int) y / seg ;
 	sq->BLX = (double) prtX * seg ;
 	sq->BLY = (double) prtY * seg ;
 	sq->dep = l ;
@@ -55,8 +72,9 @@ square* newSquare(double x, double y, int l  , int k) {
 	return sq ;
 }
 
-int newKey(double x, double y, int oldKey) {
-	square* sq = (square*)TreeGetNode(tree , oldKey)  ;
+int newKey(double x, double y, int oldKey)
+{
+	pSquare sq = (pSquare)TreeGetNode(tree , oldKey)  ;
 	int quarter = 1;
 	double halfSeg = (double) 1 / (2 * sq->dep) ;
 	double offSetX = x - sq->BLX ;
@@ -67,45 +85,55 @@ int newKey(double x, double y, int oldKey) {
 	return (oldKey*10 + quarter) ;
 }
 
+void printOneSquare(pSquare sq)
+{
+	double x = sq->BLX;
+	double y = sq->BLY;
+	double l = 1 / (double)sq->dep;
+	printf("([%f, %f], [%f, %f])", x, y, x + l, y + l);
+}
+
 // Public functions
 
-void InitPartition() {
+void InitPartition()
+{
 	tree = TreeCreate(getSquareKey , cloneSquare , printSquare , delSquare, QUARTER) ;
-	square* mainSq = newSquare(0 , 0 , 1 , 0) ;
+	pSquare mainSq = newSquare(0 , 0 , 1 , 0) ;
 	TreeAddLeaf(tree , 0 , mainSq) ;
 	free (mainSq) ;
 }
 
-void RefineCell(double x, double y) {
+void RefineCell(double x, double y)
+{
 	// Case for non initiated main square
 	int key = 0 ;
 	int prvKey = 0 ;
 	int depth = 1 ;
-	int createSq = 0 ;
-	while (!createSq) {
-		Bool active = FALSE ;
-		Result foundSq = TreeNodeIsActive(tree , key , &active) ;
-		if (foundSq == FAILURE) {
-			square* sq = newSquare(x , y , depth , key) ;
-			TreeAddLeaf(tree , prvKey , sq) ;
-			createSq = 1 ;
-			free (sq) ;
+	while (1)
+	{
+		Bool active = FALSE;
+		Result foundSq = TreeNodeIsActive(tree, key, &active);
+		if (foundSq == FAILURE)
+		{
+			pSquare sq = newSquare(x, y, depth, key);
+			TreeAddLeaf(tree, prvKey, sq);
+			free(sq);
+			return;
 		}
-		if (foundSq == SUCCESS) {
-			prvKey = key ;
-			key = newKey(x , y , key) ;
-			depth *= 2 ;
-		}
+		prvKey = key;
+		key = newKey(x, y, key);
+		depth *= 2;
 	}
-
 }
 
-void PrintPartition() {
+void PrintPartition()
+{
 	TreePrint(tree) ;
 	printf("\n") ;
 }
 
-void DeletePartition() {
+void DeletePartition()
+{
 	TreeDestroy(tree) ;
 }
 
