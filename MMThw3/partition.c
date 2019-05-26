@@ -102,6 +102,10 @@ int newKey(pSquare sq, double x, double y)
 
 void InitPartition()
 {
+	if (tree != NULL)
+	{
+		TreeDestroy(tree);
+	}
 	tree = TreeCreate(getSquareKey , cloneSquare , printSquare , delSquare, QUARTER) ;
 	pSquare mainSq = newSquare(0 , 0 , 1 , 0) ;
 	TreeAddLeaf(tree , 0 , mainSq) ;
