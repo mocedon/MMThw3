@@ -72,6 +72,7 @@ void printSquare(pNode sq)
 		}
 		printf("\\");
 		printOneSquare(in_sq[i]);
+		free(in_sq[i]);
 	}
 	printf("\n");
 	free(in_sq);
