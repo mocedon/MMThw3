@@ -104,11 +104,11 @@ int newKey(pSquare sq, double x, double y)
 	double halfSeg = getLength(sq) / 2;
 	double offSetX = x - sq->BLX;
 	double offSetY = y - sq->BLY;
-	if (offSetX > halfSeg)
+	if (offSetX >= halfSeg)
 	{
 		quarter++;
 	}
-	if (offSetY > halfSeg)
+	if (offSetY >= halfSeg)
 	{
 		quarter += 2;
 	}
