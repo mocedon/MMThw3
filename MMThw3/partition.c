@@ -28,8 +28,11 @@ int getSquareKey(pNode sq)
 
 pNode cloneSquare(pNode sq)
 {
-	pSquare newSq = (pSquare)malloc(sizeof(square)) ;
-	if (newSq == NULL) return NULL ;
+	pSquare newSq = (pSquare)malloc(sizeof(square));
+	if (newSq == NULL)
+	{
+		return NULL;
+	}
 	pSquare tmp = (pSquare)sq;
 	newSq->BLX = tmp->BLX ;
 	newSq->BLY = tmp->BLY ;
@@ -57,6 +60,10 @@ void printSquare(pNode sq)
 	pSquare tmp = (pSquare)sq;
 	printOneSquare(tmp);
 	pSquare* in_sq = (pSquare*)TreeGetChildren(tree, tmp->key);
+	if (in_sq == NULL)
+	{
+		return;
+	}
 	for (int i = 0; i < QUARTER; i++)
 	{
 		if (in_sq[i] == NULL)
@@ -77,7 +84,11 @@ void delSquare(pNode sq)
 
 pSquare newSquare(double x, double y, int l  , int k)
 {
-	pSquare sq = (pSquare) malloc(sizeof(square)) ;
+	pSquare sq = (pSquare)malloc(sizeof(square));
+	if (sq == NULL)
+	{
+		return NULL;
+	}
 	int prtX = x * l;
 	int prtY = y * l;
 	sq->BLX = (double)prtX / l;
@@ -93,9 +104,15 @@ int newKey(pSquare sq, double x, double y)
 	double halfSeg = getLength(sq) / 2;
 	double offSetX = x - sq->BLX;
 	double offSetY = y - sq->BLY;
-	if (offSetX > halfSeg) quarter++;
-	if (offSetY > halfSeg) quarter += 2;
-	return ((sq->key) * 10 + quarter);
+	if (offSetX > halfSeg)
+	{
+		quarter++;
+	}
+	if (offSetY > halfSeg)
+	{
+		quarter += 2;
+	}
+	return ((sq->key) * QUARTER + quarter);
 }
 
 // Public functions
@@ -107,21 +124,39 @@ void InitPartition()
 		TreeDestroy(tree);
 	}
 	tree = TreeCreate(getSquareKey , cloneSquare , printSquare , delSquare, QUARTER) ;
-	pSquare mainSq = newSquare(0 , 0 , 1 , 0) ;
-	TreeAddLeaf(tree , 0 , mainSq) ;
-	free (mainSq) ;
+	if (tree == NULL)
+	{
+		exit(1);
+	}
+	pSquare mainSq = newSquare(0, 0, 1, 0);
+	if (mainSq == NULL)
+	{
+		TreeDestroy(tree);
+		exit(1);
+	}
+	if (TreeAddLeaf(tree, 0, mainSq) == FAILURE)
+	{
+		TreeDestroy(tree);
+		free(mainSq);
+		exit(1);
+	}
+	free(mainSq);
 }
 
 void RefineCell(double x, double y)
 {
 	// Case for non initiated main square
+	if (x < 0 || y < 0 || x >= 1 || y >= 1)
+	{
+		return;
+	}
 	int key = 0 ;
 	int prvKey = 0 ;
 	int depth = 1 ;
 	while (1)
 	{
 		pSquare sq = TreeGetNode(tree, key);
-		if (sq==NULL)
+		if (sq == NULL)
 		{
 			sq = newSquare(x, y, depth, key);
 			TreeAddLeaf(tree, prvKey, sq);
