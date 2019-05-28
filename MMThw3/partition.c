@@ -120,10 +120,7 @@ int newKey(pSquare sq, double x, double y)
 
 void InitPartition()
 {
-	if (tree != NULL)
-	{
-		TreeDestroy(tree);
-	}
+	TreeDestroy(tree);
 	tree = TreeCreate(getSquareKey , cloneSquare , printSquare , delSquare, QUARTER) ;
 	if (tree == NULL)
 	{

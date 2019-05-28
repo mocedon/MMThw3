@@ -130,22 +130,38 @@ pTree TreeCreate(GetKeyFunction getKey, CloneFunction clone,
 
 void TreeDestroy(pTree t)
 {
+	if (t == NULL)
+	{
+		return;
+	}
 	delElem(t->head, t->del);
 	free(t);
 }
 
 int TreeNodesCount(pTree t)
 {
+	if (t == NULL)
+	{
+		return 0;
+	}
 	return countElem(t->head);
 }
 
 void TreePrint(pTree t)
 {
+	if (t == NULL)
+	{
+		return;
+	}
 	printElem(t->head, t->print);
 }
 
 Result TreeAddLeaf(pTree t, int key, pNode newLeaf)
 {
+	if (t == NULL)
+	{
+		return FAILURE;
+	}
 	PELEMENT elem = createElem(newLeaf, t->clone, t->k);
 	if (elem == NULL)
 	{
@@ -169,6 +185,10 @@ Result TreeAddLeaf(pTree t, int key, pNode newLeaf)
 
 Result TreeNodeIsActive(pTree t, int key, Bool* answer)
 {
+	if (t == NULL)
+	{
+		return FAILURE;
+	}
 	*answer = FALSE;
 	PELEMENT elem = findElem(t->head, key, t->getKey);
 	if (elem == NULL)
@@ -184,6 +204,10 @@ Result TreeNodeIsActive(pTree t, int key, Bool* answer)
 
 Result TreeNodeIsLeaf(pTree t, int key, Bool* answer)
 {
+	if (t == NULL)
+	{
+		return FAILURE;
+	}
 	*answer = FALSE;
 	PELEMENT elem = findElem(t->head, key, t->getKey);
 	if (elem == NULL)
@@ -199,6 +223,10 @@ Result TreeNodeIsLeaf(pTree t, int key, Bool* answer)
 
 Result TreeDelLeaf(pTree t, int key)
 {
+	if (t == NULL)
+	{
+		return FAILURE;
+	}
 	PELEMENT elem = findElem(t->head, key, t->getKey);
 	if (elem == NULL || elem->childrenCount > 0)
 	{
@@ -228,7 +256,7 @@ Result TreeDelLeaf(pTree t, int key)
 
 pNode TreeGetRoot(pTree t)
 {
-	if (t->head == NULL || t->head->obj == NULL)
+	if (t == NULL || t->head == NULL || t->head->obj == NULL)
 	{
 		return NULL;
 	}
@@ -237,6 +265,10 @@ pNode TreeGetRoot(pTree t)
 
 pNode TreeGetNode(pTree t, int key)
 {
+	if (t == NULL)
+	{
+		return NULL;
+	}
 	PELEMENT elem = findElem(t->head, key, t->getKey);
 	if (elem == NULL || elem->obj == NULL)
 	{
@@ -247,6 +279,10 @@ pNode TreeGetNode(pTree t, int key)
 
 pNode* TreeGetChildren(pTree t, int key)
 {
+	if (t == NULL)
+	{
+		return NULL;
+	}
 	PELEMENT elem = findElem(t->head, key, t->getKey);
 	if (elem == NULL || elem->children == NULL)
 	{
