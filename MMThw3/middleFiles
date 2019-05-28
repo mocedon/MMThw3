@@ -2,5 +2,4 @@
 if [[ $# -lt 3 ]]; then
 	exit 1
 fi
-result="`find $1 -maxdepth 1 | tail -n+$(($2+2)) | head -n-$3`"
-echo $result
+find "$1" -maxdepth 1 | sort | tail -n+$(($2+2)) | head -n-$3
